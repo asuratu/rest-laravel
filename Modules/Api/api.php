@@ -11,11 +11,11 @@ Route::prefix('v1')
                 Route::prefix('users')->name('users')
                     ->group(function () {
                         // 登录
-                        Route::put('/login', 'UserController@login')
+                        Route::put('/login', 'UsersController@login')
                             ->name('users.login');
 
                         // 注册
-                        Route::post('/register', 'UserController@register')
+                        Route::post('/register', 'UsersController@register')
                             ->name('users.register');
                     });
             });
@@ -32,6 +32,8 @@ Route::prefix('v1')
                         // 退出登录
                         Route::get('auth/logout', 'AuthController@logout')->name('auth.logout');
 
+                        // 获取当前用户信息
+                        Route::get('users/me', 'UsersController@me')->name('users.me');
 
                     });
             });

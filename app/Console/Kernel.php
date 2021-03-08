@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Facades\Log;
 use Modules\Common\Console\InitCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Modules\Admin\Console\AdminInitCommand;
@@ -42,5 +43,13 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
+    }
+
+    public function bootstrap()
+    {
+        parent::bootstrap();
+
+        // 设置独立的日志文件
+        Log::setDefaultDriver('console');
     }
 }

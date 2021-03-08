@@ -54,7 +54,7 @@ class AdminController extends RestController
     public function me(): JsonResponse
     {
         return $this->success(
-            $this->transformItem(Auth::user(), new AdminUserTransformer())
+            $this->transformItem(Auth::guard('admin')->user(), new AdminUserTransformer())
         );
     }
 
@@ -66,7 +66,7 @@ class AdminController extends RestController
         Admin::user()->updateUser($inputs);
 
         return $this->success(
-            $this->transformItem(Admin::user(), new AdminUserTransformer())
+            $this->transformItem(Admin::guard('admin')->user(), new AdminUserTransformer())
         );
     }
 
@@ -74,7 +74,7 @@ class AdminController extends RestController
     public function currentUser(): JsonResponse
     {
         return $this->success(
-            $this->transformItem(Auth::user(), new AdminUserTransformer())
+            $this->transformItem(Auth::guard('admin')->user(), new AdminUserTransformer())
         );
     }
 

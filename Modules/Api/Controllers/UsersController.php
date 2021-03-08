@@ -14,7 +14,7 @@ use Modules\Api\Services\UserService;
 use Modules\Api\Transformers\UserTransformer;
 use ZhuiTech\BootLaravel\Controllers\RestController;
 
-class UserController extends RestController
+class UsersController extends RestController
 {
     protected $transformer = 'Modules\Api\Transformers\UserTransformer';
 
@@ -64,5 +64,14 @@ class UserController extends RestController
                 ->setMeta($tokenArr)
         );
     }
+
+    public function me(): JsonResponse
+    {
+        return $this->success(
+            $this->transformItem(Auth::user(), new UserTransformer())
+        );
+    }
+
+
 
 }
