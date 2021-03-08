@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BaseTransformer extends TransformerAbstract
 {
-    public function transform(Model $model)
+    public function transform(Model $model): array
     {
         $array = $model->toArray();
 
