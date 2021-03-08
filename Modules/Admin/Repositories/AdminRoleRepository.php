@@ -2,15 +2,15 @@
 
 namespace Modules\Admin\Repositories;
 
-use Modules\Admin\Entities\AdminPermission;
+use Modules\Admin\Entities\AdminRole;
 use ZhuiTech\BootLaravel\Repositories\BaseRepository;
 
-class AdminPermissionRepository extends BaseRepository
+class AdminRoleRepository extends BaseRepository
 {
 
     function model()
     {
-        return AdminPermission::class;
+        return AdminRole::class;
     }
 
 }

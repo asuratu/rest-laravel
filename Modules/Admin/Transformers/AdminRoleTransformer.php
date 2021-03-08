@@ -4,6 +4,7 @@ namespace Modules\Admin\Transformers;
 
 use League\Fractal\TransformerAbstract;
 use Modules\Admin\Entities\AdminRole;
+use Modules\Admin\Resources\AdminPermissionResource;
 
 class AdminRoleTransformer extends TransformerAbstract
 {

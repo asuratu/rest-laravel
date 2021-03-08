@@ -7,7 +7,7 @@ use Modules\Admin\Entities\AdminPermission;
 
 class AdminPermissionTransformer extends TransformerAbstract
 {
-    public function toArray(AdminPermission $adminPermission)
+    public function transform(AdminPermission $adminPermission): array
     {
         return [
             'id' => $adminPermission->id,

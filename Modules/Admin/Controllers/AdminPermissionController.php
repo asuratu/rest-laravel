@@ -4,12 +4,16 @@ namespace Modules\Admin\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Modules\Admin\Repositories\AdminPermissionRepository;
-use Modules\Admin\Resources\AdminPermissionResource;
+use Modules\Admin\Requests\AdminPermissionRequest;
 use ZhuiTech\BootLaravel\Controllers\RestController;
 
 class AdminPermissionController extends RestController
 {
     protected $keywords = ['slug', 'name', 'http_path'];
+
+    protected $transformer = 'Modules\Admin\Transformers\AdminPermissionTransformer';
+
+    protected $listTransformer = 'Modules\Admin\Transformers\AdminPermissionTransformer';
 
     public function __construct(AdminPermissionRepository $repository)
     {
@@ -17,42 +21,24 @@ class AdminPermissionController extends RestController
     }
 
     // 后台权限列表
-    public function index(): JsonResponse
+    // 使用默认方法 index
+
+    public function store(): JsonResponse
     {
-        $data = request()->all();
+        $request = app(AdminPermissionRequest::class);
 
-        $result = $this->execIndex($data);
+        $request->validated();
 
-        return $this->success($result);
-//        return $this->success(AdminPermissionResource::collection($result));
+        return parent::store();
     }
 
+    public function update($id): JsonResponse
+    {
+        $request = app(AdminPermissionRequest::class);
 
-//    public function store(AdminPermissionRequest $request, AdminPermission $model)
-//    {
-//        $inputs = $request->validated();
-//        $res = $model->create($inputs);
-//
-//        return $this->created(AdminPermissionResource::make($res));
-//    }
-//
-//    public function edit(AdminPermission $adminPermission)
-//    {
-//        return $this->okObject(AdminPermissionResource::make($adminPermission));
-//    }
-//
-//    public function update(AdminPermissionRequest $request, AdminPermission $adminPermission)
-//    {
-//        $inputs = $request->validated();
-//        $adminPermission->update($inputs);
-//
-//        return $this->created(AdminPermissionResource::make($adminPermission));
-//    }
-//
-//    public function destroy(AdminPermission $adminPermission)
-//    {
-//        $adminPermission->delete();
-//
-//        return $this->noContent();
-//    }
+        $request->validated();
+
+        return parent::update($id);
+    }
+
 }

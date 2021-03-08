@@ -2,77 +2,74 @@
 
 namespace Modules\Admin\Controllers;
 
-use Illuminate\Http\Request;
-use Modules\Admin\Entities\AdminRole;
-use Modules\Admin\Filters\AdminRoleFilter;
+use Illuminate\Http\JsonResponse;
 use Modules\Admin\Entities\AdminPermission;
+use Modules\Admin\Repositories\AdminRoleRepository;
 use Modules\Admin\Requests\AdminRoleRequest;
-use Modules\Admin\Resources\AdminRoleResource;
-use Modules\Common\Controllers\BaseController;
+use Modules\Admin\Requests\AdminUserRequest;
+use Modules\Admin\Transformers\AdminRoleTransformer;
+use ZhuiTech\BootLaravel\Controllers\RestController;
 
-class AdminRoleController extends BaseController
+class AdminRoleController extends RestController
 {
-    // 写入
-    public function store(AdminRoleRequest $request, AdminRole $model)
+    protected $keywords = ['slug', 'name'];
+
+    protected $transformer = 'Modules\Admin\Transformers\AdminRoleTransformer';
+
+    protected $listTransformer = 'Modules\Admin\Transformers\AdminRoleTransformer';
+
+    public function __construct(AdminRoleRepository $repository)
     {
+        parent::__construct($repository);
+    }
+
+    public function create(): JsonResponse
+    {
+        return $this->success($this->formData());
+    }
+
+    public function store(): JsonResponse
+    {
+        $request = app(AdminRoleRequest::class);
+
         $inputs = $request->validated();
-        $role = $model->create($inputs);
+
+        $role = parent::execStore($inputs);
 
         if (!empty($perms = $inputs['permissions'] ?? [])) {
             $role->permissions()->attach($perms);
         }
 
-        return $this->created(AdminRoleResource::make($role));
+        return $this->success($this->transformItem($role, new AdminRoleTransformer()));
     }
 
-    // 编辑
-    public function edit(Request $request, AdminRole $adminRole)
+    public function edit($id): JsonResponse
     {
-        $adminRole->load(['permissions']);
-        $roleData = AdminRoleResource::make($adminRole)->toArray($request);
+        $formData = $this->formData();
 
-        return $this->okList([
-            'role' => $roleData,
-            'permissions' => $this->formData()['permissions'],
-        ]);
+        $adminRole = $this->findOrThrow($id);
+
+        return $this->success(
+            $this->transformItem($adminRole, new AdminRoleTransformer())
+                ->setMeta($formData)
+        );
     }
 
-    // 修改
-    public function update(AdminRoleRequest $request, AdminRole $adminRole)
+    public function update($id): JsonResponse
     {
+        $request = app(AdminUserRequest::class);
+
         $inputs = $request->validated();
-        $adminRole->update($inputs);
+
+        $adminRole = $this->findOrThrow($id);
+
+        parent::execUpdate($adminRole, $inputs);
+
         if (isset($inputs['permissions'])) {
             $adminRole->permissions()->sync($inputs['permissions']);
         }
 
-        return $this->created(AdminRoleResource::make($adminRole));
-    }
-
-    // 删除
-    public function destroy(AdminRole $adminRole)
-    {
-        $adminRole->delete();
-
-        return $this->noContent();
-    }
-
-    // 展示
-    public function index(Request $request, AdminRoleFilter $filter)
-    {
-        $roles = AdminRole::query()
-            ->with(['permissions'])
-            ->filter($filter)
-            ->orderByDesc('id');
-        $roles = $request->get('all') ? $roles->get() : $roles->paginate();
-
-        return $this->okObject(AdminRoleResource::collection($roles));
-    }
-
-    // 添加
-    public function create()
-    {
-        return $this->okList($this->formData());
+        return $this->success($this->transformItem($adminRole, new AdminRoleTransformer()));
     }
 
     /**
@@ -80,7 +77,7 @@ class AdminRoleController extends BaseController
      *
      * @return array
      */
-    protected function formData()
+    protected function formData(): array
     {
         $permissions = AdminPermission::query()
             ->orderByDesc('id')

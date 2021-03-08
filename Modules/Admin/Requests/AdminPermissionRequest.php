@@ -9,9 +9,10 @@ use Modules\Admin\Rules\AdminPermissionHttpPath;
 
 class AdminPermissionRequest extends FormRequest
 {
-    public function rules()
+    public function rules(): array
     {
-        $id = (int) optional($this->route('admin_permissions'))->id;
+        $id = (int)optional($this->route('admin_permissions'))->id;
+
         $rules = [
             'name' => 'required|unique:admin_permissions,name,' . $id,
             'slug' => 'required|unique:admin_permissions,slug,' . $id,
@@ -22,6 +23,7 @@ class AdminPermissionRequest extends FormRequest
                 new AdminPermissionHttpPath(),
             ],
         ];
+
         if ($this->isMethod('put')) {
             $rules = Arr::only($rules, $this->keys());
         }
@@ -29,7 +31,7 @@ class AdminPermissionRequest extends FormRequest
         return $rules;
     }
 
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'name' => '名称',

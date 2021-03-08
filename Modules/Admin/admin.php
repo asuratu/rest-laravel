@@ -41,8 +41,10 @@ Route::prefix('v1')
                         // 后台用户
                         Route::resource('admins', 'AdminUserController');
 
+                        // 权限
                         Route::resource('permissions', 'AdminPermissionController');
 
+                        // 角色
                         Route::resource('roles', 'AdminRoleController');
                     });
             });

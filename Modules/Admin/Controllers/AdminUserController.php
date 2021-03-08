@@ -18,7 +18,7 @@ class AdminUserController extends RestController
 
     protected $transformer = 'Modules\Admin\Transformers\AdminUserTransformer';
 
-    protected $listTransformer = 'Modules\Admin\Transformers\AdminUserListTransformer';
+    protected $listTransformer = 'Modules\Admin\Transformers\AdminUserTransformer';
 
     public function __construct(AdminUsersRepository $repository)
     {
@@ -82,8 +82,6 @@ class AdminUserController extends RestController
         $formData = $this->formData();
 
         $adminUser = $this->findOrThrow($id);
-
-        $adminUser->load(['roles', 'permissions']);
 
         $adminUser = $adminUser->onlyRolePermissionIds();
 
