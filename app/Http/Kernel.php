@@ -5,6 +5,7 @@ namespace App\Http;
 use Fruitcake\Cors\HandleCors;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Modules\Admin\Middleware\LogOperation;
+use Modules\Api\Middleware\RecordRequestMessage;
 use Modules\Common\Utils\ApiEncrypt\AES\AesDecryptMiddleware;
 use Modules\Common\Utils\ApiEncrypt\AES\AesEncryptMiddleware;
 use Modules\Common\Utils\Signature\Middleware\SignatureMiddleware;
@@ -28,7 +29,10 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \App\Http\Middleware\TrimStrings::class,
 
-        LogOperation::class,
+        // 后台请求记录到数据库
+//        LogOperation::class,
+        // 前台请求记录到日志
+//        RecordRequestMessage::class,
         // 参数加密
 //        AesEncryptMiddleware::class
 
@@ -76,11 +80,13 @@ class Kernel extends HttpKernel
         'api.signature' => SignatureMiddleware::class,
         'aes.decrypt' => AesDecryptMiddleware::class,
         'aes.encrypt' => AesEncryptMiddleware::class,
+        // 后台请求记录到数据库
         'admin.log' => LogOperation::class,
+        // 前台请求记录到日志
+        'api.log' => RecordRequestMessage::class,
+        // 区别前后台的token
         'jwt.auth.admin' => \Modules\Admin\Middleware\JwtAuthAdmin::class,
 
-//        'auth' => \Modules\Admin\Http\Middleware\Authenticate::class,
-//        'guest' => \Modules\Admin\Http\Middleware\RedirectIfAuthenticated::class,
     ];
 
     protected $middlewarePriority = [
