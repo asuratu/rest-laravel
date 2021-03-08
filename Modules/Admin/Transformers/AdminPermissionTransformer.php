@@ -15,8 +15,8 @@ class AdminPermissionTransformer extends TransformerAbstract
             'slug' => $adminPermission->slug,
             'http_method' => $adminPermission->http_method,
             'http_path' => $adminPermission->http_path,
-            'created_at' => (string)$adminPermission->created_at,
-            'updated_at' => (string)$adminPermission->updated_at,
+            'created_at' => (string) $adminPermission->created_at,
+            'updated_at' => (string) $adminPermission->updated_at,
         ];
     }
 }

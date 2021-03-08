@@ -3,11 +3,12 @@
 namespace Modules\Common\Utils\ApiEncrypt\AES;
 
 use Closure;
-use Illuminate\Http\Response;
-use Dingo\Api\Http\Response as DingoResponse;
+use ZhuiTech\BootLaravel\Controllers\RestResponse;
 
 class AesEncryptMiddleware
 {
+    use RestResponse;
+
     public function handle($request, Closure $next)
     {
         $response = $next($request);
@@ -17,16 +18,8 @@ class AesEncryptMiddleware
             return $response;
         }
 
-        $value = '';
+        $value = json_encode(json_decode($response->getContent())->data);
 
-        if ($response instanceof DingoResponse) {
-            $value = $response->getContent();
-        }
-
-        if ($response instanceof Response) {
-            $value = $response->getContent();
-        }
-
-        return response(encrypt($value, false));
+        return $this->success(encrypt($value, false));
     }
 }

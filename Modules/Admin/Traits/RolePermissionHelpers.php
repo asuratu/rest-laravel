@@ -8,25 +8,18 @@ trait RolePermissionHelpers
 {
     /**
      * 关联的角色和权限, 是否只是 id 数组.
-     *
-     * @var bool
      */
     public bool $onlyRolePermissionIds = false;
 
     /**
      * 关联的角色和权限，只包含 slug.
-     *
-     * @var bool
      */
     public bool $onlyRolePermissionSlugs = false;
 
     /**
      * 获取所有权限，包括角色中的.
-     *
-     * @var bool
      */
     public bool $gatherAllPermissions = false;
-
 
     public function onlyRolePermissionIds($yes = true)
     {
@@ -78,6 +71,4 @@ trait RolePermissionHelpers
 
         return $this->permissions;
     }
-
-
 }

@@ -7,10 +7,8 @@ use ZhuiTech\BootLaravel\Repositories\BaseRepository;
 
 class AdminRoleRepository extends BaseRepository
 {
-
-    function model()
+    public function model()
     {
         return AdminRole::class;
     }
-
 }

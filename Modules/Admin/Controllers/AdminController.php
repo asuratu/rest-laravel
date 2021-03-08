@@ -2,15 +2,15 @@
 
 namespace Modules\Admin\Controllers;
 
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Modules\Admin\Requests\AdminUserProfileRequest;
-use Modules\Admin\Requests\AuthorizationRequest;
-use Modules\Admin\Transformers\AdminUserTransformer;
-use Modules\Admin\Utils\Admin;
 use Tymon\JWTAuth\JWT;
 use Tymon\JWTAuth\JWTGuard;
+use Modules\Admin\Utils\Admin;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Support\Facades\Auth;
+use Modules\Admin\Requests\AuthorizationRequest;
+use Modules\Admin\Requests\AdminUserProfileRequest;
+use Modules\Admin\Transformers\AdminUserTransformer;
 use ZhuiTech\BootLaravel\Controllers\RestController;
 
 class AdminController extends RestController
@@ -30,7 +30,7 @@ class AdminController extends RestController
             'access_token' => $jwtToken,
             'token_type' => 'Bearer',
             'expires_in' => Auth::guard('admin')->factory()->getTTL() * 60,
-            'type' => 'admin'
+            'type' => 'admin',
         ];
 
         return $this->success(
@@ -47,7 +47,7 @@ class AdminController extends RestController
             'access_token' => $token,
             'token_type' => 'Bearer',
             'expires_in' => Auth::guard('admin')->factory()->getTTL() * 60,
-            'type' => 'admin'
+            'type' => 'admin',
         ]);
     }
 

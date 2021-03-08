@@ -2,8 +2,8 @@
 
 namespace Modules\Admin\Transformers;
 
-use League\Fractal\TransformerAbstract;
 use Modules\Admin\Entities\AdminRole;
+use League\Fractal\TransformerAbstract;
 
 class AdminRoleTransformer extends TransformerAbstract
 {
@@ -13,8 +13,8 @@ class AdminRoleTransformer extends TransformerAbstract
             'id' => $adminRole->id,
             'name' => $adminRole->name,
             'slug' => $adminRole->slug,
-            'created_at' => (string)$adminRole->created_at,
-            'updated_at' => (string)$adminRole->updated_at,
+            'created_at' => (string) $adminRole->created_at,
+            'updated_at' => (string) $adminRole->updated_at,
             'permissions' => $adminRole->permissions,
         ];
     }

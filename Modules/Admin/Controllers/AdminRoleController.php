@@ -4,9 +4,9 @@ namespace Modules\Admin\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Modules\Admin\Entities\AdminPermission;
-use Modules\Admin\Repositories\AdminRoleRepository;
 use Modules\Admin\Requests\AdminRoleRequest;
 use Modules\Admin\Requests\AdminUserRequest;
+use Modules\Admin\Repositories\AdminRoleRepository;
 use Modules\Admin\Transformers\AdminRoleTransformer;
 use ZhuiTech\BootLaravel\Controllers\RestController;
 
@@ -74,8 +74,6 @@ class AdminRoleController extends RestController
 
     /**
      * 返回添加和编辑表单所需的选项数据.
-     *
-     * @return array
      */
     protected function formData(): array
     {

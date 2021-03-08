@@ -2,10 +2,10 @@
 
 namespace Modules\Api\Requests\User;
 
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Modules\Common\Requests\Base\ApiRequest;
 
-class RegisterRequest extends ApiRequest
+class RegisterRequest extends FormRequest
 {
     public function rules()
     {

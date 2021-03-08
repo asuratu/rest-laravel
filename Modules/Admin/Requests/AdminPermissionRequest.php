@@ -11,7 +11,7 @@ class AdminPermissionRequest extends FormRequest
 {
     public function rules(): array
     {
-        $id = (int)optional($this->route('admin_permissions'))->id;
+        $id = (int) optional($this->route('admin_permissions'))->id;
 
         $rules = [
             'name' => 'required|unique:admin_permissions,name,' . $id,

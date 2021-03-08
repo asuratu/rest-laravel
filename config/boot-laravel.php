@@ -32,6 +32,8 @@ if (!defined('REST_BUSY')) {
     define('REST_FILE_STORE_FAIL', 45003);
 
     define('ADMIN_LOGIN_FAIL', 46001);
+
+    define('REST_LOGIN_FAIL', 47001);
 }
 
 return [
@@ -66,7 +68,10 @@ return [
         REST_FILE_PATH_FAIL => '文件路径生成失败',
         REST_FILE_STORE_FAIL => '文件存储失败',
 
+        REST_LOGIN_FAIL => '账号或密码输入错误，登录失败',
+
         ADMIN_LOGIN_FAIL => '账号或密码输入错误，登录失败',
+
     ],
 
     // 路由设置

@@ -1,40 +1,38 @@
 <?php
 
-//$api = app('Dingo\Api\Routing\Router');
-//
-//$params = [
-//    'prefix' => 'api',
-//    'version' => 'v1.0',
-//    'namespace' => 'Modules\Api\Controllers',
-//];
-//
-//$mwNotLogin = ['middleware' => [
-//    'api.throttle',
-//],
-//    'limit' => config('api.rate_limits.sign.limit'),
-//    'expires' => config('api.rate_limits.sign.expires'),
-//];
-//
-//$mwLogin = ['middleware' => [
-//    'api.throttle',
-//    'jwt.auth',
-//],
-//    'limit' => config('api.rate_limits.sign.limit'),
-//    'expires' => config('api.rate_limits.sign.expires'),
-//];
-//
-//// 不需要登录的接口
-//$api->group(array_merge($params, $mwNotLogin), function ($api) {
-//    $api->group(['prefix' => '/user'], function ($api) {
-//        $api->post('/register', 'UserController@register');
-//        $api->post('/login', 'UserController@login');
-//    });
-//});
-//
-//// 需要登录的接口
-//$api->group(array_merge($params, $mwLogin), function ($api) {
-//    $api->group(['prefix' => '/user'], function ($api) {
-//        $api->post('/refresh', 'UserController@refresh');
-//        $api->post('/logout', 'UserController@logout');
-//    });
-//});
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('v1')
+    ->middleware('cors')
+    ->name('api.v1.')
+    ->group(function () {
+        Route::middleware('throttle:' . config('api.rate_limits.sign'))
+            ->group(function () {
+                Route::prefix('users')->name('users')
+                    ->group(function () {
+                        // 登录
+                        Route::put('/login', 'UserController@login')
+                            ->name('users.login');
+
+                        // 注册
+                        Route::post('/register', 'UserController@register')
+                            ->name('users.register');
+                    });
+            });
+
+        Route::middleware('throttle:' . config('api.rate_limits.access'))
+            ->group(function () {
+
+                // 登录后可以访问的接口
+                Route::middleware(['jwt.auth'])
+                    ->group(function () {
+                        // 刷新token
+                        Route::get('auth/refresh', 'AuthController@refresh')->name('auth.refresh');
+
+                        // 退出登录
+                        Route::get('auth/logout', 'AuthController@logout')->name('auth.logout');
+
+
+                    });
+            });
+    });

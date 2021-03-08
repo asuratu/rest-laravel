@@ -58,6 +58,7 @@
         "files": [
             "helpers/yw.php",
             "helpers/array.php",
+            "helpers/string.php",
             "helpers/time.php"
         ]
     },

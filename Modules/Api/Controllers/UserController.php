@@ -2,111 +2,67 @@
 
 namespace Modules\Api\Controllers;
 
-use Cache;
 use Exception;
-use Illuminate\Support\Str;
-use Modules\Api\Entities\User;
-use Tymon\JWTAuth\JWTAuth as JWT;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Str;
+use Modules\Api\Repositories\UsersRepository;
 use Modules\Api\Requests\User\LoginRequest;
 use Modules\Api\Requests\User\RegisterRequest;
-use Modules\Common\Controllers\BaseController;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Modules\Api\Services\UserService;
+use Modules\Api\Transformers\UserTransformer;
+use ZhuiTech\BootLaravel\Controllers\RestController;
 
-class UserController extends BaseController
+class UserController extends RestController
 {
-    protected $user;
-    protected $jwt;
+    protected $transformer = 'Modules\Api\Transformers\UserTransformer';
 
-    public function __construct(User $user, JWT $jwt)
+    public function __construct(UsersRepository $repository)
     {
-        $this->user = $user;
-        $this->jwt = $jwt;
+        parent::__construct($repository);
     }
 
     /**
      * 用户注册.
+     * @param RegisterRequest $request
+     * @param UserService $userService
+     * @return object
      */
-    public function register(RegisterRequest $request): object
+    public function register(RegisterRequest $request, UserService $userService): JsonResponse
     {
-        $code = $request->code;
-        $mobile = $request->mobile;
-        $password = $request->password;
-
-        if (!$code == env('COMMON_CODE') && !$code == Cache::get($mobile)) {
-            return $this->okMsg('短信验证码错误');
-        }
-
         try {
-            $user = $this->user->create(['mobile' => $request->mobile, 'username' => Str::uuid(), 'password' => Hash::make($password)]);
+            $user = $userService->createUser(['mobile' => $request->mobile, 'username' => Str::uuid(), 'password' => Hash::make($request->password)]);
 
-            $token = JWTAuth::fromUser($user);
+            $token = $userService->getToken($user);
 
-            return $this->okList(compact('token'));
+            return $this->success(
+                $this->transformItem($user, new UserTransformer())
+                    ->setMeta($token)
+            );
         } catch (Exception $e) {
-            return $this->okMsg($e->getMessage());
+            return $this->fail($e->getMessage());
         }
     }
 
-    public function login(LoginRequest $request): object
+    public function login(LoginRequest $request, UserService $userService): JsonResponse
     {
-        try {
-            if (!$token = $this->jwt->attempt($request->only('username', 'password'))) {
-                return $this->okMsg('用户名或密码错误');
-            }
-        } catch (TokenExpiredException $e) {
-            return $this->okMsg('登录过期');
-        } catch (TokenInvalidException $e) {
-            return $this->okMsg('无效的token');
-        } catch (JWTException $e) {
-            return $this->okMsg('token未提交');
-        } catch (Exception $e) {
-            return $this->okMsg('操作出错');
+        $credentials['mobile'] = $request->mobile;
+
+        $credentials['password'] = $request->password;
+
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
+            return $this->error(REST_LOGIN_FAIL);
         }
 
-        $token = JWTAuth::fromUser($this->user);
+        $user = Auth::guard('api')->user();
 
-        return $this->okList(compact('token'));
+        $tokenArr = $userService->getToken($user);
+
+        return $this->success(
+            $this->transformItem($user, new UserTransformer())
+                ->setMeta($tokenArr)
+        );
     }
 
-    /**
-     * 刷新token.
-     */
-    public function refresh(): object
-    {
-        $token = $this->jwt->getToken();
-
-        if (!$token) {
-            throw new UnauthorizedHttpException('Token not provided');
-        }
-
-        try {
-            $token = $this->jwt->refresh();
-        } catch (TokenInvalidException $exception) {
-            return $this->okMsg($exception->getMessage());
-        }
-
-        return $this->okList(compact('token'));
-    }
-
-    /**
-     * 退出登录.
-     *
-     * @throws JWTException
-     */
-    public function logout(): object
-    {
-        if ($this->jwt->parseToken()->invalidate()) {
-            return $this->okMsg('退出成功');
-        }
-
-        $token = $this->jwt->getToken();
-        $this->jwt->invalidate($token);
-
-        return $this->okMsg('退出成功');
-    }
 }

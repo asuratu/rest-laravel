@@ -3,10 +3,10 @@
 namespace Modules\Admin\Entities;
 
 use Modules\Admin\Traits\ModelHelpers;
-use Modules\Admin\Traits\RolePermissionHelpers;
 use Modules\Admin\Utils\HasPermissions;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use Modules\Admin\Traits\RolePermissionHelpers;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class AdminUser extends Authenticatable implements JWTSubject
@@ -16,6 +16,7 @@ class AdminUser extends Authenticatable implements JWTSubject
     use ModelHelpers;
     use RolePermissionHelpers;
 
+    public $timestamps = false;
 
     protected $table = 'admin_users';
 
@@ -24,8 +25,6 @@ class AdminUser extends Authenticatable implements JWTSubject
     ];
 
     protected $fillable = ['username', 'password', 'name', 'avatar', 'created_at', 'updated_at'];
-
-    public $timestamps = false;
 
     public function getJWTIdentifier()
     {

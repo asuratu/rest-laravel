@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace Modules\Api\Middleware;
 
 use Closure;
 use Illuminate\Support\Str;

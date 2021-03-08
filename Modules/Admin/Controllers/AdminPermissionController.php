@@ -3,9 +3,9 @@
 namespace Modules\Admin\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Modules\Admin\Repositories\AdminPermissionRepository;
 use Modules\Admin\Requests\AdminPermissionRequest;
 use ZhuiTech\BootLaravel\Controllers\RestController;
+use Modules\Admin\Repositories\AdminPermissionRepository;
 
 class AdminPermissionController extends RestController
 {
@@ -40,5 +40,4 @@ class AdminPermissionController extends RestController
 
         return parent::update($id);
     }
-
 }

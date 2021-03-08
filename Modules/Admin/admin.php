@@ -13,10 +13,6 @@ Route::prefix('v1')
                         // 登录
                         Route::post('/', 'AdminController@adminLogin')
                             ->name('login');
-
-                        // 刷新token
-                        Route::put('current', 'AdminController@refresh')
-                            ->name('refresh');
                     });
             });
 
@@ -26,6 +22,10 @@ Route::prefix('v1')
                 // 登录后可以访问的接口
                 Route::middleware(['jwt.auth.admin', 'jwt.auth'])
                     ->group(function () {
+                        // 刷新token
+                        Route::put('current', 'AdminController@refresh')
+                            ->name('refresh');
+
                         // 获取当前用户信息
                         Route::get('auth/me', 'AdminController@me')->name('auth.me');
 

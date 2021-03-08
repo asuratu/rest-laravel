@@ -3,8 +3,8 @@
 namespace App\Http;
 
 use Fruitcake\Cors\HandleCors;
-use Modules\Admin\Middleware\LogOperation;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Modules\Admin\Middleware\LogOperation;
 use Modules\Common\Utils\ApiEncrypt\AES\AesDecryptMiddleware;
 use Modules\Common\Utils\ApiEncrypt\AES\AesEncryptMiddleware;
 use Modules\Common\Utils\Signature\Middleware\SignatureMiddleware;
@@ -23,18 +23,15 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
 
-        // \App\Http\Middleware\TrustHosts::class,
+//        \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \App\Http\Middleware\TrimStrings::class,
 
-//        LogOperation::class,
+        LogOperation::class,
+        // 参数加密
 //        AesEncryptMiddleware::class
 
-//        \App\Http\Middleware\TrustHosts::class,
-//        \Modules\Admin\Http\Middleware\TrustProxies::class,
-//        \Modules\Admin\Http\Middleware\PreventRequestsDuringMaintenance::class,
-//        \Modules\Admin\Http\Middleware\TrimStrings::class,
     ];
 
     /**

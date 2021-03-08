@@ -14,7 +14,7 @@ class AuthorizationRequest extends FormRequest
             'username' => [
                 'required',
                 'string',
-                'exists:admin_users'
+                'exists:admin_users',
             ],
             'password' => 'required|string|min:6',
         ];
@@ -23,14 +23,14 @@ class AuthorizationRequest extends FormRequest
     public function attributes()
     {
         return [
-            'username' => '账户名'
+            'username' => '账户名',
         ];
     }
 
     public function messages()
     {
         return [
-            'username.exists' => '该账户名还未注册～'
+            'username.exists' => '该账户名还未注册～',
         ];
     }
 }

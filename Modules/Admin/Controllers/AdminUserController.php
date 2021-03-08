@@ -3,12 +3,11 @@
 namespace Modules\Admin\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Modules\Admin\Entities\AdminPermission;
 use Modules\Admin\Entities\AdminRole;
 use Modules\Admin\Entities\AdminUser;
-use Modules\Admin\Repositories\AdminUsersRepository;
+use Modules\Admin\Entities\AdminPermission;
 use Modules\Admin\Requests\AdminUserRequest;
+use Modules\Admin\Repositories\AdminUsersRepository;
 use Modules\Admin\Transformers\AdminUserTransformer;
 use ZhuiTech\BootLaravel\Controllers\RestController;
 
@@ -72,7 +71,6 @@ class AdminUserController extends RestController
         return $this->success($this->transformItem($adminUser, new AdminUserTransformer()));
     }
 
-
     // 删除用户
     // 使用父类接口
 
@@ -99,8 +97,6 @@ class AdminUserController extends RestController
 
     /**
      * 返回创建和编辑表单所需的选项数据.
-     *
-     * @return array
      */
     protected function formData(): array
     {

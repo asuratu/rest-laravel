@@ -5,11 +5,9 @@ namespace Modules\Admin\Repositories;
 use Modules\Admin\Entities\AdminUser;
 use ZhuiTech\BootLaravel\Repositories\BaseRepository;
 
-
 class AdminUsersRepository extends BaseRepository
 {
-
-    function model()
+    public function model()
     {
         return AdminUser::class;
     }
@@ -24,5 +22,4 @@ class AdminUsersRepository extends BaseRepository
 
         return parent::query($query);
     }
-
 }

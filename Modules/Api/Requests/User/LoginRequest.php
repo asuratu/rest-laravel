@@ -2,28 +2,33 @@
 
 namespace Modules\Api\Requests\User;
 
-use Illuminate\Validation\Rule;
-use Modules\Common\Requests\Base\ApiRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends ApiRequest
+class LoginRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'username' => ['required', Rule::exists('users', 'username')],
-            'password' => ['required'],
+            'mobile' => [
+                'required',
+                'regex:' . config('regular.mobile'),
+                'exists:users'
+            ],
+            'password' => 'required|string|min:6',
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'mobile' => '手机号码'
         ];
     }
 
     public function messages()
     {
         return [
-            'username.exists' => '手机号未注册',
+            'mobile.exists' => '该手机号码还未注册～'
         ];
     }
 }

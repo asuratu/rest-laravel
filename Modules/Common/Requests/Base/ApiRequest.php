@@ -2,11 +2,9 @@
 
 namespace Modules\Common\Requests\Base;
 
-use Illuminate\Http\Request;
-use Dingo\Api\Exception\ResourceException;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ApiRequest extends FormRequest
 {
@@ -20,14 +18,13 @@ class ApiRequest extends FormRequest
         return true;
     }
 
-    protected function failedValidation(Validator $validator): void
+    public function validateData($data, $rules, $message = [], $attributes = [])
     {
-        if ($this->container['request'] instanceof Request) {
-            throw new ResourceException($validator->errors()->first(), null);
-        }
+        $validate = Validator::make($data, $rules, $message, $attributes);
 
-//        throw (new ValidationException($validator))
-//            ->errorBag($this->errorBag)
-//            ->redirectTo($this->getRedirectUrl());
+        if ($validate->fails()) {
+            $error = $validate->errors()->all();
+            throw new HttpResponseException(response()->json(['message' => $error[0], 'status_code' => 422], 422));
+        }
     }
 }
