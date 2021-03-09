@@ -19,7 +19,6 @@
         "laravel/ui": "^3.2",
         "nwidart/laravel-modules": "^8.2",
         "overtrue/easy-sms": "^1.3",
-        "phpseclib/phpseclib": "^3.0",
         "tymon/jwt-auth": "^1.0",
         "zhuitech/boot-laravel": "^3.3"
     },
